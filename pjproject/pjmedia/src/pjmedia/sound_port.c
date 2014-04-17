@@ -695,6 +695,16 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_set_hd( pjmedia_snd_port *snd_port,
 	return PJ_SUCCESS;
 }
 
+PJ_DEF(pj_status_t) pjmedia_snd_port_set_hd( pjmedia_snd_port *snd_port,
+					      unsigned hd_play_limit,
+						  double hd_max_silence_level)
+{
+	snd_port->hd_play_limit = hd_play_limit;
+	snd_port->hd_max_silence_level = hd_max_silence_level;
+	snd_port->hd_play_count = 0;
+	return PJ_SUCCESS;
+}
+
 /* Get AEC tail length */
 PJ_DEF(pj_status_t) pjmedia_snd_port_get_ec_tail( pjmedia_snd_port *snd_port,
 						  unsigned *p_length)
