@@ -2775,6 +2775,26 @@ static PyObject *py_pjsua_set_ec(PyObject *pSelf, PyObject *pArgs)
 }
 
 /*
+ * py_pjsua_set_ec
+ */
+static PyObject *py_pjsua_set_hd(PyObject *pSelf, PyObject *pArgs)
+{    	
+	int hd_play_limit;
+	double hd_max_silence_level;
+	int status;
+    
+    PJ_UNUSED_ARG(pSelf);
+
+    if (!PyArg_ParseTuple(pArgs, "id", &hd_play_limit, &hd_max_silence_level)) {
+        return NULL;
+    }	
+
+    status = pjsua_set_hd(hd_play_limit, hd_max_silence_level);
+    
+    return Py_BuildValue("i", status);
+}
+
+/*
  * py_pjsua_get_ec_tail
  */
 static PyObject *py_pjsua_get_ec_tail(PyObject *pSelf, PyObject *pArgs)

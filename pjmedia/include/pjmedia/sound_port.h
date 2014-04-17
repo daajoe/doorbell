@@ -96,6 +96,9 @@ typedef struct pjmedia_snd_port_param
      */
     unsigned ec_options;
 
+	unsigned hd_play_limit;
+	double hd_max_silence_level;
+
 } pjmedia_snd_port_param;
 
 /**
@@ -269,6 +272,10 @@ PJ_DECL(pj_status_t) pjmedia_snd_port_set_ec( pjmedia_snd_port *snd_port,
 					      pj_pool_t *pool,
 					      unsigned tail_ms,
 					      unsigned options);
+
+PJ_DECL(pj_status_t) pjmedia_snd_port_set_hd( pjmedia_snd_port *snd_port,
+					      unsigned hd_play_limit,
+						  double hd_max_silence_level);
 
 
 /**

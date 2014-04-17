@@ -5504,6 +5504,10 @@ struct pjsua_media_config
      */
     unsigned		ec_tail_len;
 
+	unsigned        hd_play_limit;
+
+	double          hd_max_silence_level;
+
     /**
      * Audio capture buffer length, in milliseconds.
      *

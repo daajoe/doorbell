@@ -482,6 +482,8 @@ typedef struct
     unsigned rx_drop_pct;
     unsigned ec_options;
     unsigned ec_tail_len;
+	unsigned hd_play_limit;
+	double   hd_max_silence_level;
     int	     jb_min;
     int	     jb_max;
     int	     enable_ice;
@@ -589,9 +591,19 @@ static PyMemberDef PyObj_pjsua_media_config_members[] =
         "Echo canceller options (see pjmedia_echo_create())"
     },
     {
-        "ec_tail_len", T_INT, 
+        "ec_tail_len", T_INT,
 	offsetof(PyObj_pjsua_media_config, ec_tail_len), 0,
-        "Echo canceller tail length, in miliseconds."
+        "echo canceller tail length, in miliseconds."
+    },
+    {
+        "hd_play_limit", T_INT,
+	offsetof(PyObj_pjsua_media_config, hd_play_limit), 0,
+        "half duplex frame limit before muting input."
+    },
+    {
+        "hd_max_silence_level", T_DOUBLE,
+	offsetof(PyObj_pjsua_media_config, hd_max_silence_level), 0,
+        "Lubmin."
     },
     {
         "jb_min", T_INT, 
@@ -698,6 +710,8 @@ static void PyObj_pjsua_media_config_import(PyObj_pjsua_media_config *obj,
     obj->rx_drop_pct	    = cfg->rx_drop_pct;
     obj->ec_options	    = cfg->ec_options;
     obj->ec_tail_len	    = cfg->ec_tail_len;
+	obj->hd_play_limit     = cfg->hd_play_limit;
+	obj->hd_max_silence_level = cfg->hd_max_silence_level;
     obj->enable_ice	    = cfg->enable_ice;
     obj->enable_turn	    = cfg->enable_turn;
     Py_XDECREF(obj->turn_server);
@@ -745,6 +759,8 @@ static void PyObj_pjsua_media_config_export(pjsua_media_config *cfg,
     cfg->rx_drop_pct	    = obj->rx_drop_pct;
     cfg->ec_options	    = obj->ec_options;
     cfg->ec_tail_len	    = obj->ec_tail_len;
+	cfg->hd_play_limit   = obj->hd_play_limit;
+	cfg->hd_max_silence_level = obj->hd_max_silence_level;
     cfg->enable_ice	    = obj->enable_ice;
     cfg->enable_turn	    = obj->enable_turn;
 

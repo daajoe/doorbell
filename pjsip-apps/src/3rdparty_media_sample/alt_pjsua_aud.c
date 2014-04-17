@@ -601,6 +601,13 @@ PJ_DEF(pj_status_t) pjsua_set_ec(unsigned tail_ms, unsigned options)
     return PJ_ENOTSUP;
 }
 
+/* Configure the AEC settings of the sound port. */
+PJ_DEF(pj_status_t) pjsua_set_hd(unsigned hd_play_limit, double hd_max_silence_level)
+{
+    UNIMPLEMENTED(pjsua_set_hd)
+    return PJ_ENOTSUP;
+}
+
 /* Get current AEC tail length. */
 PJ_DEF(pj_status_t) pjsua_get_ec_tail(unsigned *p_tail_ms)
 {

@@ -61,6 +61,11 @@ struct pjmedia_snd_port
     pj_bool_t		 ec_suspended;
     unsigned		 ec_suspend_count;
     unsigned		 ec_suspend_limit;
+
+	int              hd_play_count;
+	unsigned         hd_play_limit;
+	double           hd_max_silence_level;
+	pj_bool_t		 hd_rec_mute;
 };
 
 /*
@@ -69,6 +74,7 @@ struct pjmedia_snd_port
  */
 static pj_status_t play_cb(void *user_data, pjmedia_frame *frame)
 {
+	//PJ_LOG(4,(THIS_FILE, "play_cb"));
     pjmedia_snd_port *snd_port = (pjmedia_snd_port*) user_data;
     pjmedia_port *port;
     const unsigned required_size = frame->size;
@@ -100,10 +106,29 @@ static pj_status_t play_cb(void *user_data, pjmedia_frame *frame)
 	pjmedia_echo_playback(snd_port->ec_state, (pj_int16_t*)frame->buf);
     }
 
+	double level = 0;
+	int i = 0;
+	for (; i < frame->size / sizeof(pj_int16_t); ++i) {
+		level += ((pj_int16_t*)frame->buf)[i];
+	}
+	level /= (frame->size / sizeof(pj_int16_t));
 
+	if (fabs(level) < snd_port->hd_max_silence_level)
+		goto no_frame;
+
+//	char str[100];
+//	sprintf(str, "%f", level);
+//	PJ_LOG(4,(THIS_FILE, str));
+
+	if (PJ_FALSE == snd_port->hd_rec_mute && ++snd_port->hd_play_count > snd_port->hd_play_limit) {
+		snd_port->hd_rec_mute = PJ_TRUE;
+	}
     return PJ_SUCCESS;
 
 no_frame:
+	if (PJ_TRUE == snd_port->hd_rec_mute && --snd_port->hd_play_count < 1) {
+		snd_port->hd_rec_mute = PJ_FALSE;
+	}
     frame->type = PJMEDIA_FRAME_TYPE_AUDIO;
     frame->size = required_size;
     pj_bzero(frame->buf, frame->size);
@@ -136,16 +161,22 @@ static pj_status_t rec_cb(void *user_data, pjmedia_frame *frame)
     pjmedia_clock_src_update(&snd_port->cap_clocksrc, &frame->timestamp);
 
     port = snd_port->port;
-    if (port == NULL)
-	return PJ_SUCCESS;
+    if (port == NULL) {
+		return PJ_SUCCESS;
+	}
 
     /* Cancel echo */
     if (snd_port->ec_state && !snd_port->ec_suspended) {
 	pjmedia_echo_capture(snd_port->ec_state, (pj_int16_t*) frame->buf, 0);
     }
 
-    pjmedia_port_put_frame(port, frame);
-
+	if (PJ_FALSE == snd_port->hd_rec_mute) {
+	    PJ_LOG(4,(THIS_FILE, "We can speek"));
+	}
+	else {
+		bzero(frame->buf, frame->size);
+	}
+	pjmedia_port_put_frame(port, frame);
 
     return PJ_SUCCESS;
 }
@@ -156,6 +187,7 @@ static pj_status_t rec_cb(void *user_data, pjmedia_frame *frame)
  */
 static pj_status_t play_cb_ext(void *user_data, pjmedia_frame *frame)
 {
+	PJ_LOG(4,(THIS_FILE, "play_cb_ext"));
     pjmedia_snd_port *snd_port = (pjmedia_snd_port*) user_data;
     pjmedia_port *port = snd_port->port;
 
@@ -176,6 +208,7 @@ static pj_status_t play_cb_ext(void *user_data, pjmedia_frame *frame)
  */
 static pj_status_t rec_cb_ext(void *user_data, pjmedia_frame *frame)
 {
+	PJ_LOG(4,(THIS_FILE, "rec_cb_ext"));
     pjmedia_snd_port *snd_port = (pjmedia_snd_port*) user_data;
     pjmedia_port *port;
 
@@ -192,6 +225,9 @@ static pj_status_t rec_cb_ext(void *user_data, pjmedia_frame *frame)
 PJ_DEF(void) pjmedia_snd_port_param_default(pjmedia_snd_port_param *prm)
 {
     pj_bzero(prm, sizeof(*prm));
+
+	prm->hd_play_limit = 15;
+	prm->hd_max_silence_level = 5;
 }
 
 /*
@@ -630,6 +666,16 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_set_ec( pjmedia_snd_port *snd_port,
     return status;
 }
 
+
+PJ_DEF(pj_status_t) pjmedia_snd_port_set_hd( pjmedia_snd_port *snd_port,
+					      unsigned hd_play_limit,
+						  double hd_max_silence_level)
+{
+	snd_port->hd_play_limit = hd_play_limit;
+	snd_port->hd_max_silence_level = hd_max_silence_level;
+	snd_port->hd_play_count = 0;
+	return PJ_SUCCESS;
+}
 
 /* Get AEC tail length */
 PJ_DEF(pj_status_t) pjmedia_snd_port_get_ec_tail( pjmedia_snd_port *snd_port,

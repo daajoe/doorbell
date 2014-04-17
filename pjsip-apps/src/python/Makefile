@@ -1,12 +1,12 @@
 all:
-	python setup.py build
+	python2 setup.py build
 
 clean distclean realclean:
-	python setup.py clean
+	python2 setup.py clean
 	rm -rf ./build
 
 install:
-	python setup.py $@
+	python2 setup.py $@
 
 dep doc:
 

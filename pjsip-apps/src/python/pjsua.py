@@ -366,6 +366,8 @@ class MediaConfig:
     ec_options          -- Echo Canceller option (specify zero).
     ec_tail_len         -- specify Echo Canceller tail length in milliseconds.
                            Value zero will disable the echo canceller.
+    hd_play_limit       -- Half duplex limit in frames.
+    hd_max_silence_level -- Half duplex max level assumed as silence, Lubmin.
     jb_min              -- specify the minimum jitter buffer size in
                            milliseconds. Put -1 for default.
     jb_max              -- specify the maximum jitter buffer size in
@@ -393,6 +395,8 @@ class MediaConfig:
     rx_drop_pct = 0
     ec_options = 0
     ec_tail_len = 256
+    hd_play_limit = 15
+    hd_max_silence_level = 5
     jb_min = -1
     jb_max = -1
     enable_ice = True
@@ -420,6 +424,8 @@ class MediaConfig:
         self.rx_drop_pct = cfg.rx_drop_pct
         self.ec_options = cfg.ec_options
         self.ec_tail_len = cfg.ec_tail_len
+        self.hd_play_limit = cfg.hd_play_limit
+        self.hd_max_silence_level = cfg.hd_max_silence_level
         self.jb_min = cfg.jb_min
         self.jb_max = cfg.jb_max
         self.enable_ice = cfg.enable_ice
@@ -448,6 +454,8 @@ class MediaConfig:
         cfg.rx_drop_pct = self.rx_drop_pct
         cfg.ec_options = self.ec_options
         cfg.ec_tail_len = self.ec_tail_len
+        cfg.hd_play_limit = self.hd_play_limit
+        cfg.hd_max_silence_level = self.hd_max_silence_level
         cfg.jb_min = self.jb_min
         cfg.jb_max = self.jb_max
         cfg.enable_ice = self.enable_ice
