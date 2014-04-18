@@ -171,6 +171,11 @@ static pj_status_t rec_cb(void *user_data, pjmedia_frame *frame)
 	pjmedia_echo_capture(snd_port->ec_state, (pj_int16_t*) frame->buf, 0);
     }
 
+
+	char str[100];
+	sprintf(str, "limit = %d, silence_level = %f", snd_port->hd_play_limit, snd_port->hd_max_silence_level);
+	PJ_LOG(4,(THIS_FILE, str));
+
 	if (PJ_FALSE == snd_port->hd_rec_mute) {
 	    PJ_LOG(3,(THIS_FILE, "We can speak"));
 	}
@@ -188,7 +193,7 @@ static pj_status_t rec_cb(void *user_data, pjmedia_frame *frame)
  */
 static pj_status_t play_cb_ext(void *user_data, pjmedia_frame *frame)
 {
-	PJ_LOG(4,(THIS_FILE, "play_cb_ext"));
+	PJ_LOG(1,(THIS_FILE, "play_cb_ext"));
     pjmedia_snd_port *snd_port = (pjmedia_snd_port*) user_data;
     pjmedia_port *port = snd_port->port;
 
@@ -209,7 +214,7 @@ static pj_status_t play_cb_ext(void *user_data, pjmedia_frame *frame)
  */
 static pj_status_t rec_cb_ext(void *user_data, pjmedia_frame *frame)
 {
-	PJ_LOG(4,(THIS_FILE, "rec_cb_ext"));
+	PJ_LOG(1,(THIS_FILE, "rec_cb_ext"));
     pjmedia_snd_port *snd_port = (pjmedia_snd_port*) user_data;
     pjmedia_port *port;
 
@@ -227,8 +232,7 @@ PJ_DEF(void) pjmedia_snd_port_param_default(pjmedia_snd_port_param *prm)
 {
     pj_bzero(prm, sizeof(*prm));
 
-	prm->hd_play_limit = 15;
-	prm->hd_max_silence_level = 5;
+	prm->hd_play_limit = -1;
 }
 
 /*
