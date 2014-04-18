@@ -172,7 +172,7 @@ static pj_status_t rec_cb(void *user_data, pjmedia_frame *frame)
     }
 
 	if (PJ_FALSE == snd_port->hd_rec_mute) {
-	    PJ_LOG(4,(THIS_FILE, "We can speek"));
+	    PJ_LOG(3,(THIS_FILE, "We can speak"));
 	}
 	else {
 		bzero(frame->buf, frame->size);
