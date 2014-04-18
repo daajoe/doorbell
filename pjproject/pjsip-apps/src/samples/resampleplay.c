@@ -158,6 +158,8 @@ int main(int argc, char *argv[])
 		 samples_per_frame,	/* samples per frame.	    */
 		 bits_per_sample,	/* bits per sample.	    */
 		 0,			/* options		    */
+		 15,
+		 5,
 		 &snd_port		/* returned port	    */
 		 );
     if (status != PJ_SUCCESS) {

@@ -195,6 +195,8 @@ int main(int argc, char *argv[])
 		     PJMEDIA_PIA_SRATE(&file_port->info) / 1000,
 		     PJMEDIA_PIA_BITS(&file_port->info),/* bits per sample.   */
 		     0,					/* options	      */
+			 15,
+			 5,
 		     &snd_port				/* returned port      */
 		     );
 	if (status != PJ_SUCCESS) {
@@ -248,6 +250,8 @@ int main(int argc, char *argv[])
 			 REC_CLOCK_RATE / 1000,	    /* samples per frame.   */
 			 NBITS,			    /* bits per sample.	    */
 			 0,			    /* options		    */
+			 15,
+			 5,
 			 &snd_port		    /* returned port	    */
 		     );
 	if (status != PJ_SUCCESS) {

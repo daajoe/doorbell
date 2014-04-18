@@ -25,6 +25,7 @@
 
 #include "ffmpeg_util.h"
 #include <libavformat/avformat.h>
+#include <libavcodec/avcodec.h>
 
 #define MAKE_VER(mj,mn,mi)	((mj << 16) | (mn << 8) | (mi << 0))
 #define VER_AT_LEAST(mj,mn,mi)	(MAKE_VER(LIBAVUTIL_VERSION_MAJOR, \

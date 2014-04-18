@@ -139,6 +139,8 @@ int main(int argc, char *argv[])
 		 PJMEDIA_PIA_SPF(&file_port->info), /* samples per frame.   */
 		 PJMEDIA_PIA_BITS(&file_port->info),/* bits per sample.	    */
 		 0,				    /* options		    */
+		 15,
+		 5,
 		 &snd_port			    /* returned port	    */
 		 );
     if (status != PJ_SUCCESS) {

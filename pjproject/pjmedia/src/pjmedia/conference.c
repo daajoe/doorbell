@@ -235,6 +235,8 @@ struct pjmedia_conf
     unsigned		  channel_count;/**< Number of channels (1=mono).   */
     unsigned		  samples_per_frame;	/**< Samples per frame.	    */
     unsigned		  bits_per_sample;	/**< Bits per sample.	    */
+	unsigned          hd_play_limit; /**half duplex number of packets limit */
+	unsigned          hd_max_silence_level; /**half duplex max level assumed as silence */
 };
 
 
@@ -479,7 +481,9 @@ static pj_status_t create_sound_port( pj_pool_t *pool,
 						    conf->channel_count,
 						    conf->samples_per_frame,
 						    conf->bits_per_sample, 
-						    0,	/* options */
+						    0,
+							conf->hd_play_limit,
+							conf->hd_max_silence_level, /* options */
 						    &conf->snd_dev_port);
 
 	} else {
@@ -488,6 +492,8 @@ static pj_status_t create_sound_port( pj_pool_t *pool,
 					      conf->samples_per_frame,
 					      conf->bits_per_sample,
 					      0,    /* Options */
+					      conf->hd_play_limit,
+					      conf->hd_max_silence_level, /* options */
 					      &conf->snd_dev_port);
 
 	}
@@ -526,7 +532,9 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
 					 unsigned channel_count,
 					 unsigned samples_per_frame,
 					 unsigned bits_per_sample,
-					 unsigned options,
+					 unsigned options,	
+					 unsigned hd_play_limit,
+					 unsigned hd_max_silence_level,
 					 pjmedia_conf **p_conf )
 {
     pjmedia_conf *conf;
@@ -553,6 +561,9 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
     conf->channel_count = channel_count;
     conf->samples_per_frame = samples_per_frame;
     conf->bits_per_sample = bits_per_sample;
+
+	conf->hd_play_limit = hd_play_limit;
+	conf->hd_max_silence_level = hd_max_silence_level;
 
     
     /* Create and initialize the master port interface. */

@@ -866,6 +866,8 @@ static void call_on_media_update( pjsip_inv_session *inv,
                             PJMEDIA_PIA_SPF(&media_port->info), /* samples per frame*/
                             PJMEDIA_PIA_BITS(&media_port->info),/* bits per sample  */
                             0,
+							15,
+							5,
                             &g_snd_port);
 
     if (status != PJ_SUCCESS) {

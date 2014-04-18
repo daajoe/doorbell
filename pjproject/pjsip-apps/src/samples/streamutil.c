@@ -535,21 +535,21 @@ int main(int argc, char *argv[])
 					PJMEDIA_PIA_CCNT(&stream_port->info),
 					PJMEDIA_PIA_SPF(&stream_port->info),
 					PJMEDIA_PIA_BITS(&stream_port->info),
-					0, &snd_port);
+					0, 15, 5, &snd_port);
 	else if (dir == PJMEDIA_DIR_ENCODING)
 	    status = pjmedia_snd_port_create_rec(pool, -1, 
 					PJMEDIA_PIA_SRATE(&stream_port->info),
 					PJMEDIA_PIA_CCNT(&stream_port->info),
 					PJMEDIA_PIA_SPF(&stream_port->info),
 					PJMEDIA_PIA_BITS(&stream_port->info),
-					0, &snd_port);
+					0, 15, 5, &snd_port);
 	else
 	    status = pjmedia_snd_port_create_player(pool, -1, 
 					PJMEDIA_PIA_SRATE(&stream_port->info),
 					PJMEDIA_PIA_CCNT(&stream_port->info),
 					PJMEDIA_PIA_SPF(&stream_port->info),
 					PJMEDIA_PIA_BITS(&stream_port->info),
-					0, &snd_port);
+					0, 15, 5, &snd_port);
 
 
 	if (status != PJ_SUCCESS) {

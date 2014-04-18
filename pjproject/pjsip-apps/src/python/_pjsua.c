@@ -2775,7 +2775,7 @@ static PyObject *py_pjsua_set_ec(PyObject *pSelf, PyObject *pArgs)
 }
 
 /*
- * py_pjsua_set_ec
+ * py_pjsua_set_hd
  */
 static PyObject *py_pjsua_set_hd(PyObject *pSelf, PyObject *pArgs)
 {    	
@@ -3039,6 +3039,9 @@ static char pjsua_set_null_snd_dev_doc[] =
 static char pjsua_set_ec_doc[] =
     "int _pjsua.set_ec (int tail_ms, int options) "
     "Configure the echo canceller tail length of the sound port.";
+static char pjsua_set_hd_doc[] =
+    "int _pjsua.set_hd (int hd_play_limit, double hd_max_silence_level) "
+    "Configure the half duplex mode, Lubmin.";
 static char pjsua_get_ec_tail_doc[] =
     "int _pjsua.get_ec_tail () "
     "Get current echo canceller tail length.";
@@ -4317,6 +4320,10 @@ static PyMethodDef py_pjsua_methods[] =
     {
         "set_ec", py_pjsua_set_ec, METH_VARARGS,
         pjsua_set_ec_doc
+    },
+	{
+        "set_hd", py_pjsua_set_hd, METH_VARARGS,
+        pjsua_set_hd_doc
     },
     {
         "get_ec_tail", py_pjsua_get_ec_tail, METH_VARARGS,

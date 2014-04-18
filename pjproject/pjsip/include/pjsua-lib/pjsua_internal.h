@@ -487,6 +487,7 @@ struct pjsua_data
     /* Timer entry list */
     pjsua_timer_list	 timer_list;
     pj_mutex_t          *timer_mutex;
+
 };
 
 

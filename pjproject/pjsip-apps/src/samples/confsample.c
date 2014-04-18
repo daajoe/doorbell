@@ -190,6 +190,8 @@ int main(int argc, char *argv[])
 				  samples_per_frame,
 				  bits_per_sample,
 				  0,	    /* options		    */
+				  15,
+				  5,
 				  &conf	    /* result		    */
 				  );
     if (status != PJ_SUCCESS) {

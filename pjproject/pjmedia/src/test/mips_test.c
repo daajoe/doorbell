@@ -478,7 +478,7 @@ static pjmedia_port* init_conf_port(unsigned nb_participant,
     /* Create conf */
     status = pjmedia_conf_create(pool, 2+nb_participant*2, clock_rate, 
 				 channel_count, samples_per_frame, 16, 
-				 PJMEDIA_CONF_NO_DEVICE, &conf);
+				 PJMEDIA_CONF_NO_DEVICE, 15, 5, &conf);
     if (status != PJ_SUCCESS)
 	return NULL;
 

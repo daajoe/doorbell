@@ -351,7 +351,10 @@ pj_status_t pjsua_aud_subsys_init()
 				 pjsua_var.mconf_cfg.channel_count,
 				 pjsua_var.mconf_cfg.samples_per_frame,
 				 pjsua_var.mconf_cfg.bits_per_sample,
-				 opt, &pjsua_var.mconf);
+			     opt, 
+				 pjsua_var.media_cfg.hd_play_limit,
+				 pjsua_var.media_cfg.hd_max_silence_level,
+				 &pjsua_var.mconf);
     if (status != PJ_SUCCESS) {
 	pjsua_perror(THIS_FILE, "Error creating conference bridge",
 		     status);

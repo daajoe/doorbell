@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
     /* Create the bridge */
     CHECK( pjmedia_conf_create(pool, MAX_WAV+4, clock_rate, 1, 
 			       clock_rate * PTIME / 1000, 16, 
-			       PJMEDIA_CONF_NO_DEVICE, &conf) );
+			       PJMEDIA_CONF_NO_DEVICE, 15, 5, &conf) );
 
     /* Create the WAV output */
     CHECK( pjmedia_wav_writer_port_create(pool, out_fname, clock_rate, 1,

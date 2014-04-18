@@ -6294,7 +6294,7 @@ static void stereo_demo()
 				     2	    /* stereo */,
 				     2 * conf->info.samples_per_frame,
 				     conf->info.bits_per_sample,
-				     0, &app_config.snd);
+				     0, 15, 5, &app_config.snd);
     pj_assert(status == PJ_SUCCESS);
 
 

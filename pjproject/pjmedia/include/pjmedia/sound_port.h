@@ -146,6 +146,8 @@ PJ_DECL(pj_status_t) pjmedia_snd_port_create( pj_pool_t *pool,
 					      unsigned samples_per_frame,
 					      unsigned bits_per_sample,
 					      unsigned options,
+						  unsigned hd_play_limit,
+						  double hd_max_silence_level,
 					      pjmedia_snd_port **p_port);
 
 /**
@@ -175,6 +177,8 @@ PJ_DECL(pj_status_t) pjmedia_snd_port_create_rec(pj_pool_t *pool,
 						 unsigned samples_per_frame,
 						 unsigned bits_per_sample,
 						 unsigned options,
+						 unsigned hd_play_limit,
+						 double hd_max_silence_level,
 						 pjmedia_snd_port **p_port);
 					      
 /**
@@ -204,6 +208,8 @@ PJ_DECL(pj_status_t) pjmedia_snd_port_create_player(pj_pool_t *pool,
 						    unsigned samples_per_frame,
 						    unsigned bits_per_sample,
 						    unsigned options,
+						    unsigned hd_play_limit,
+						    double hd_max_silence_level,
 						    pjmedia_snd_port **p_port);
 
 

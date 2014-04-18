@@ -26,6 +26,7 @@
 #include <pj/log.h>
 #include <pj/rand.h>
 #include <pj/string.h>	    /* pj_memset() */
+#include <math.h>
 
 #define AEC_TAIL	    128	    /* default AEC length in ms */
 #define AEC_SUSPEND_LIMIT   5	    /* seconds of no activity	*/
@@ -382,6 +383,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create( pj_pool_t *pool,
 					     unsigned samples_per_frame,
 					     unsigned bits_per_sample,
 					     unsigned options,
+						 unsigned hd_play_limit,
+						 double hd_max_silence_level,
 					     pjmedia_snd_port **p_port)
 {
     pjmedia_snd_port_param param;
@@ -402,6 +405,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create( pj_pool_t *pool,
     param.base.bits_per_sample = bits_per_sample;
     param.options = options;
     param.ec_options = 0;
+	param.hd_play_limit = hd_play_limit;
+	param.hd_max_silence_level = hd_max_silence_level;
 
     return pjmedia_snd_port_create2(pool, &param, p_port);
 }
@@ -416,6 +421,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_rec( pj_pool_t *pool,
 						 unsigned samples_per_frame,
 						 unsigned bits_per_sample,
 						 unsigned options,
+						 unsigned hd_play_limit,
+						 double hd_max_silence_level,
 						 pjmedia_snd_port **p_port)
 {
     pjmedia_snd_port_param param;
@@ -435,6 +442,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_rec( pj_pool_t *pool,
     param.base.bits_per_sample = bits_per_sample;
     param.options = options;
     param.ec_options = 0;
+	param.hd_play_limit = hd_play_limit;
+	param.hd_max_silence_level = hd_max_silence_level;
 
     return pjmedia_snd_port_create2(pool, &param, p_port);
 }
@@ -450,6 +459,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_player( pj_pool_t *pool,
 						    unsigned samples_per_frame,
 						    unsigned bits_per_sample,
 						    unsigned options,
+					        unsigned hd_play_limit,
+					      	double hd_max_silence_level,
 						    pjmedia_snd_port **p_port)
 {
     pjmedia_snd_port_param param;
@@ -469,6 +480,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_player( pj_pool_t *pool,
     param.base.bits_per_sample = bits_per_sample;
     param.options = options;
     param.ec_options = 0;
+	param.hd_play_limit = hd_play_limit;
+	param.hd_max_silence_level = hd_max_silence_level;
 
     return pjmedia_snd_port_create2(pool, &param, p_port);
 }
@@ -500,6 +513,11 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create2(pj_pool_t *pool,
     pj_memcpy(&snd_port->aud_param, &prm->base, sizeof(snd_port->aud_param));
     snd_port->options = prm->options;
     snd_port->prm_ec_options = prm->ec_options;
+
+	snd_port->hd_play_limit = prm->hd_play_limit;
+	snd_port->hd_max_silence_level = prm->hd_max_silence_level;
+	snd_port->hd_play_count = 0;
+	snd_port->hd_rec_mute = PJ_FALSE;
 
     ptime_usec = prm->base.samples_per_frame * 1000 / prm->base.channel_count /
                  prm->base.clock_rate * 1000;
