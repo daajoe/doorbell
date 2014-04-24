@@ -6153,6 +6153,16 @@ PJ_DECL(pjmedia_port*) pjsua_set_no_snd_dev(void);
  */
 PJ_DECL(pj_status_t) pjsua_set_ec(unsigned tail_ms, unsigned options);
 
+
+/**
+* Setup half duplex settings
+*
+* @parm hd_play_limit        half duplex frame limit before muting input
+*
+* @parm hd_max_silence_level half duplex maximum silence level
+*
+* @return		PJ_SUCCESS on success.
+*/
 PJ_DECL(pj_status_t) pjsua_set_hd(unsigned hd_play_limit, double hd_max_silence_level);
 
 

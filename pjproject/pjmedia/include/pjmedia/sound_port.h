@@ -96,8 +96,8 @@ typedef struct pjmedia_snd_port_param
      */
     unsigned ec_options;
 
-	unsigned hd_play_limit;
-	double hd_max_silence_level;
+  unsigned hd_play_limit;
+  double hd_max_silence_level;
 
 } pjmedia_snd_port_param;
 

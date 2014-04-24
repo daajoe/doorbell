@@ -247,6 +247,18 @@ static pj_status_t start_sound_device( pj_pool_t *pool,
     pjmedia_aud_param param_copy;
     pj_status_t status;
 
+
+    char str[100];
+    sprintf(str, "===== start_sound_device ========================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", snd_port->hd_play_limit, snd_port->hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
+
+
     /* Check if sound has been started. */
     if (snd_port->aud_stream != NULL)
 	return PJ_SUCCESS;
@@ -463,8 +475,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_player( pj_pool_t *pool,
 						    unsigned samples_per_frame,
 						    unsigned bits_per_sample,
 						    unsigned options,
-					        unsigned hd_play_limit,
-					      	double hd_max_silence_level,
+						    unsigned hd_play_limit,
+						    double hd_max_silence_level,
 						    pjmedia_snd_port **p_port)
 {
     pjmedia_snd_port_param param;
@@ -484,8 +496,8 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create_player( pj_pool_t *pool,
     param.base.bits_per_sample = bits_per_sample;
     param.options = options;
     param.ec_options = 0;
-	param.hd_play_limit = hd_play_limit;
-	param.hd_max_silence_level = hd_max_silence_level;
+    param.hd_play_limit = hd_play_limit;
+    param.hd_max_silence_level = hd_max_silence_level;
 
     return pjmedia_snd_port_create2(pool, &param, p_port);
 }
@@ -518,10 +530,10 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_create2(pj_pool_t *pool,
     snd_port->options = prm->options;
     snd_port->prm_ec_options = prm->ec_options;
 
-	snd_port->hd_play_limit = prm->hd_play_limit;
-	snd_port->hd_max_silence_level = prm->hd_max_silence_level;
-	snd_port->hd_play_count = 0;
-	snd_port->hd_rec_mute = PJ_FALSE;
+    snd_port->hd_play_limit = prm->hd_play_limit;
+    snd_port->hd_max_silence_level = prm->hd_max_silence_level;
+    snd_port->hd_play_count = 0;
+    snd_port->hd_rec_mute = PJ_FALSE;
 
     ptime_usec = prm->base.samples_per_frame * 1000 / prm->base.channel_count /
                  prm->base.clock_rate * 1000;
@@ -693,21 +705,13 @@ PJ_DEF(pj_status_t) pjmedia_snd_port_set_hd( pjmedia_snd_port *snd_port,
 					      unsigned hd_play_limit,
 						  double hd_max_silence_level)
 {
-	snd_port->hd_play_limit = hd_play_limit;
-	snd_port->hd_max_silence_level = hd_max_silence_level;
-	snd_port->hd_play_count = 0;
-	return PJ_SUCCESS;
+  snd_port->hd_play_limit = hd_play_limit;
+  snd_port->hd_max_silence_level = hd_max_silence_level;
+  snd_port->hd_play_count = 0;
+  
+  return PJ_SUCCESS;
 }
 
-PJ_DEF(pj_status_t) pjmedia_snd_port_set_hd( pjmedia_snd_port *snd_port,
-					      unsigned hd_play_limit,
-						  double hd_max_silence_level)
-{
-	snd_port->hd_play_limit = hd_play_limit;
-	snd_port->hd_max_silence_level = hd_max_silence_level;
-	snd_port->hd_play_count = 0;
-	return PJ_SUCCESS;
-}
 
 /* Get AEC tail length */
 PJ_DEF(pj_status_t) pjmedia_snd_port_get_ec_tail( pjmedia_snd_port *snd_port,

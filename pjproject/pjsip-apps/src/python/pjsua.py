@@ -456,6 +456,8 @@ class MediaConfig:
         cfg.ec_tail_len = self.ec_tail_len
         cfg.hd_play_limit = self.hd_play_limit
         cfg.hd_max_silence_level = self.hd_max_silence_level
+        #TODO:
+        #_pjsua.set_hd(self.hd_play_limit, self.hd_max_silence_level)
         cfg.jb_min = self.jb_min
         cfg.jb_max = self.jb_max
         cfg.enable_ice = self.enable_ice

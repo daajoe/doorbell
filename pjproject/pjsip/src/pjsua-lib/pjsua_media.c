@@ -47,8 +47,6 @@ static void pjsua_media_config_dup(pj_pool_t *pool,
  */
 pj_status_t pjsua_media_subsys_init(const pjsua_media_config *cfg)
 {
-    //\\TODO: up next
-  //
     pj_status_t status;
 
     pj_log_push_indent();
@@ -94,10 +92,25 @@ pj_status_t pjsua_media_subsys_init(const pjsua_media_config *cfg)
 	goto on_error;
     }
 
+    char str[100];
+    sprintf(str, "=============== subsys_init ====================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", cfg->hd_play_limit, cfg->hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
+
+
+    status = pjsua_set_hd(pjsua_var.media_cfg.hd_play_limit, pjsua_var.media_cfg.hd_max_silence_level);
+    if (status != PJ_SUCCESS)
+        goto on_error;
+
     status = pjsua_aud_subsys_init();
     if (status != PJ_SUCCESS)
 	goto on_error;
-
+    
 #if defined(PJMEDIA_HAS_SRTP) && (PJMEDIA_HAS_SRTP != 0)
     /* Initialize SRTP library (ticket #788). */
     status = pjmedia_srtp_init_lib(pjsua_var.med_endpt);

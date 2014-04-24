@@ -235,8 +235,8 @@ struct pjmedia_conf
     unsigned		  channel_count;/**< Number of channels (1=mono).   */
     unsigned		  samples_per_frame;	/**< Samples per frame.	    */
     unsigned		  bits_per_sample;	/**< Bits per sample.	    */
-	unsigned          hd_play_limit; /**half duplex number of packets limit */
-	unsigned          hd_max_silence_level; /**half duplex max level assumed as silence */
+    unsigned              hd_play_limit; /**half duplex number of packets limit */
+    double                hd_max_silence_level; /**half duplex max level assumed as silence */
 };
 
 
@@ -466,6 +466,17 @@ static pj_status_t create_sound_port( pj_pool_t *pool,
 	return status;
 
 
+    char str[100];
+    sprintf(str, "===== create_sound_port ========================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", conf->hd_play_limit, conf->hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    //here:
+
     /* Create sound device port: */
 
     if ((conf->options & PJMEDIA_CONF_NO_DEVICE) == 0) {
@@ -482,8 +493,8 @@ static pj_status_t create_sound_port( pj_pool_t *pool,
 						    conf->samples_per_frame,
 						    conf->bits_per_sample, 
 						    0,
-							conf->hd_play_limit,
-							conf->hd_max_silence_level, /* options */
+						    conf->hd_play_limit,
+						    conf->hd_max_silence_level, /* options */
 						    &conf->snd_dev_port);
 
 	} else {
@@ -534,12 +545,22 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
 					 unsigned bits_per_sample,
 					 unsigned options,	
 					 unsigned hd_play_limit,
-					 unsigned hd_max_silence_level,
+					 double hd_max_silence_level,
 					 pjmedia_conf **p_conf )
 {
     pjmedia_conf *conf;
     const pj_str_t name = { "Conf", 4 };
     pj_status_t status;
+
+    char str[100];
+    sprintf(str, "======== conf_create params ==================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", hd_play_limit, hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
 
     /* Can only accept 16bits per sample, for now.. */
     PJ_ASSERT_RETURN(bits_per_sample == 16, PJ_EINVAL);
@@ -562,9 +583,17 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
     conf->samples_per_frame = samples_per_frame;
     conf->bits_per_sample = bits_per_sample;
 
-	conf->hd_play_limit = hd_play_limit;
-	conf->hd_max_silence_level = hd_max_silence_level;
+    conf->hd_play_limit = hd_play_limit;
+    conf->hd_max_silence_level = hd_max_silence_level;
 
+    sprintf(str, "======== conf_create pre init ==================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", conf->hd_play_limit, conf->hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
     
     /* Create and initialize the master port interface. */
     conf->master_port = PJ_POOL_ZALLOC_T(pool, pjmedia_port);
@@ -580,6 +609,16 @@ PJ_DEF(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
     conf->master_port->get_frame = &get_frame;
     conf->master_port->put_frame = &put_frame;
     conf->master_port->on_destroy = &destroy_port;
+
+
+    sprintf(str, "======== conf_create post init ==================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", conf->hd_play_limit, conf->hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
 
 
     /* Create port zero for sound device. */

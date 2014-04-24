@@ -160,7 +160,7 @@ PJ_DECL(pj_status_t) pjmedia_conf_create( pj_pool_t *pool,
 					  unsigned bits_per_sample,
 					  unsigned options,
 					  unsigned hd_play_limit,
-					  unsigned hd_max_silence_level,
+					  double hd_max_silence_level,
 					  pjmedia_conf **p_conf );
 
 

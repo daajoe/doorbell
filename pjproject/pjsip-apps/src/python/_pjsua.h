@@ -482,8 +482,8 @@ typedef struct
     unsigned rx_drop_pct;
     unsigned ec_options;
     unsigned ec_tail_len;
-	unsigned hd_play_limit;
-	double   hd_max_silence_level;
+    unsigned hd_play_limit;
+    double   hd_max_silence_level;
     int	     jb_min;
     int	     jb_max;
     int	     enable_ice;
@@ -759,8 +759,8 @@ static void PyObj_pjsua_media_config_export(pjsua_media_config *cfg,
     cfg->rx_drop_pct	    = obj->rx_drop_pct;
     cfg->ec_options	    = obj->ec_options;
     cfg->ec_tail_len	    = obj->ec_tail_len;
-	cfg->hd_play_limit   = obj->hd_play_limit;
-	cfg->hd_max_silence_level = obj->hd_max_silence_level;
+    cfg->hd_play_limit   = obj->hd_play_limit;
+    cfg->hd_max_silence_level = obj->hd_max_silence_level;
     cfg->enable_ice	    = obj->enable_ice;
     cfg->enable_turn	    = obj->enable_turn;
 

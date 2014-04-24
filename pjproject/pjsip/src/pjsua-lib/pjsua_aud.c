@@ -344,6 +344,17 @@ pj_status_t pjsua_aud_subsys_init()
 	opt |= PJMEDIA_CONF_USE_LINEAR;
     }
 
+
+    // up next here:
+    char str[100];
+    sprintf(str, "======== pjsua_var aud ==========================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", pjsua_var.media_cfg.hd_play_limit, pjsua_var.media_cfg.hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
     /* Init conference bridge. */
     status = pjmedia_conf_create(pjsua_var.pool,
 				 pjsua_var.media_cfg.max_media_ports,
@@ -351,7 +362,7 @@ pj_status_t pjsua_aud_subsys_init()
 				 pjsua_var.mconf_cfg.channel_count,
 				 pjsua_var.mconf_cfg.samples_per_frame,
 				 pjsua_var.mconf_cfg.bits_per_sample,
-			     opt, 
+				 opt, 
 				 pjsua_var.media_cfg.hd_play_limit,
 				 pjsua_var.media_cfg.hd_max_silence_level,
 				 &pjsua_var.mconf);
@@ -373,6 +384,16 @@ pj_status_t pjsua_aud_subsys_init()
 				      pjsua_var.mconf_cfg.bits_per_sample,
 				      &pjsua_var.null_port);
     PJ_ASSERT_RETURN(status == PJ_SUCCESS, status);
+
+    sprintf(str, "======== pjsua_var aud after conf ==============================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", pjsua_var.media_cfg.hd_play_limit, pjsua_var.media_cfg.hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
+
 
     return status;
 
@@ -858,6 +879,9 @@ PJ_DEF(pj_status_t) pjsua_conf_connect( pjsua_conf_port_id source,
 
 		pjmedia_snd_port_param_default(&param);
 		param.ec_options = pjsua_var.media_cfg.ec_options;
+		param.hd_play_limit = pjsua_var.media_cfg.hd_play_limit;
+		param.hd_max_silence_level = pjsua_var.media_cfg.hd_max_silence_level;
+
 
 		/* Create parameter based on peer info */
 		status = create_aud_param(&param.base, pjsua_var.cap_dev,
@@ -1660,6 +1684,18 @@ static pj_status_t open_snd_dev(pjmedia_snd_port_param *param)
 	      1000 / param->base.clock_rate));
     pj_log_push_indent();
 
+
+    char str[100];
+    sprintf(str, "===== open_snd_dev ========================================");
+    PJ_LOG(4,(THIS_FILE, str));
+    
+    sprintf(str, "limit = %d, silence_level = %f", param->hd_play_limit, param->hd_max_silence_level);
+    PJ_LOG(4,(THIS_FILE, str));
+
+    sprintf(str, "================================================================");
+    PJ_LOG(4,(THIS_FILE, str));
+
+
     status = pjmedia_snd_port_create2( pjsua_var.snd_pool,
 				       param, &pjsua_var.snd_port);
     if (status != PJ_SUCCESS)
@@ -1899,6 +1935,9 @@ PJ_DEF(pj_status_t) pjsua_set_snd_dev( int capture_dev,
 			    pjsua_var.media_cfg.channel_count / 1000;
 	pjmedia_snd_port_param_default(&param);
 	param.ec_options = pjsua_var.media_cfg.ec_options;
+	param.hd_play_limit = pjsua_var.media_cfg.hd_play_limit;
+	param.hd_max_silence_level = pjsua_var.media_cfg.hd_max_silence_level;
+
 	status = create_aud_param(&param.base, capture_dev, playback_dev,
 				  alt_cr[i], pjsua_var.media_cfg.channel_count,
 				  samples_per_frame, 16);
@@ -2046,6 +2085,27 @@ PJ_DEF(pj_status_t) pjsua_set_ec(unsigned tail_ms, unsigned options)
     if (pjsua_var.snd_port)
 	status = pjmedia_snd_port_set_ec(pjsua_var.snd_port, pjsua_var.pool,
 					 tail_ms, options);
+
+    PJSUA_UNLOCK();
+    return status;
+}
+
+//TODO:
+/*
+ * Configure the Half Duplex (HD) settings of the sound port.
+ */
+PJ_DEF(pj_status_t) pjsua_set_hd(unsigned hd_play_limit, double hd_max_silence_level)
+{
+    pj_status_t status = PJ_SUCCESS;
+
+    PJSUA_LOCK();
+
+    pjsua_var.media_cfg.hd_play_limit = hd_play_limit;
+    pjsua_var.media_cfg.hd_max_silence_level = hd_max_silence_level;
+
+    if (pjsua_var.snd_port)
+	status = pjmedia_snd_port_set_hd(pjsua_var.snd_port, hd_play_limit,
+					 hd_max_silence_level);
 
     PJSUA_UNLOCK();
     return status;
